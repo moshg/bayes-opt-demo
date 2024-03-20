@@ -239,6 +239,7 @@ packaging==23.2
 pandas==2.2.1
     # via altair
     # via ax-platform
+    # via bayes-opt-demo
     # via streamlit
 pandocfilters==1.5.1
     # via nbconvert
