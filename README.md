@@ -18,3 +18,7 @@ OSXの場合は次の手順を踏んでAxをインストールすることでア
 ```sh
 rye run start
 ```
+
+## 参照
+
+- [AX - Service API Example on Hartmann6](https://ax.dev/tutorials/gpei_hartmann_service.html)
