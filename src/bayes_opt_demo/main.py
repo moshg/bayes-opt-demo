@@ -6,6 +6,8 @@ from bayes_opt_demo.ui.pages import suggestion_page, upload_page, visualization_
 
 
 def main():
+    st.set_page_config(page_title="ベイズ最適化デモ", layout="wide", page_icon="📊")
+
     st.title("ベイズ最適化デモ")
 
     upload_tab, visualization_tab, suggestion_tab = st.tabs(
