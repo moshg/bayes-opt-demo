@@ -125,7 +125,7 @@ def objective_config_input(objective_df: pd.DataFrame) -> Objectives:
     return objectives
 
 
-@st.cache_data
+@st.cache_data(ttl="1h", max_entries=1)
 def get_pyg_renderer(df: pd.DataFrame) -> StreamlitRenderer:
     """PygWalkerのStreamlitRendererを取得する。
 
