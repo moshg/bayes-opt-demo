@@ -86,6 +86,7 @@ def main():
         return
 
     # ベイズ最適化を開始する
+    max_trials = max(int(max_trials), 1)
     candidates = bayes_optimize(dataset, max_trials=max_trials)
 
     # 提案されたデータを表示する
