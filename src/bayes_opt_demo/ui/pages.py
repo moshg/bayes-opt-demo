@@ -3,17 +3,18 @@ import streamlit as st
 from bayes_opt_demo.dataset import Dataset, Objectives
 from bayes_opt_demo.optimization import bayes_optimize
 from bayes_opt_demo.ui.widgets import (
+    csv_uploader,
     debug_df,
-    input_objective_config,
-    input_parameter_config,
-    select_objective_columns,
-    upload_csv,
+    objective_columns_select,
+    objective_config_input,
+    parameter_config_input,
 )
 
 
 def upload_page():
+    """教師データのアップロードページ"""
     st.header("学習データのアップロード")
-    df = upload_csv()
+    df = csv_uploader()
 
     data_src = st.radio(
         "使用データ",
@@ -35,9 +36,10 @@ def upload_page():
 
 
 def suggestion_page(df: pd.DataFrame):
+    """実験提案ページ"""
     # 目的変数の選択
     st.header("目的変数の選択")
-    objective_columns = select_objective_columns(df)
+    objective_columns = objective_columns_select(df)
     parameter_series = pd.DataFrame(
         {column: df[column] for column in df.columns if column not in objective_columns}
     )
@@ -49,10 +51,10 @@ def suggestion_page(df: pd.DataFrame):
     st.header("設定")
 
     st.subheader("目的変数の目標")
-    objectives: Objectives = input_objective_config(objective_series)
+    objectives: Objectives = objective_config_input(objective_series)
 
     st.subheader("説明変数の制約")
-    parameters = input_parameter_config(parameter_series)
+    parameters = parameter_config_input(parameter_series)
 
     dataset = Dataset(
         parameters=parameters,

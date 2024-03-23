@@ -1,6 +1,5 @@
 import pandas as pd
 import streamlit as st
-
 from bayes_opt_demo.dataset import (
     Objectives,
     ObjFloatColumn,
@@ -10,7 +9,7 @@ from bayes_opt_demo.dataset import (
 )
 
 
-def upload_csv():
+def csv_uploader():
     """CSVファイルをアップロードし、DataFrameを返すウィジェット。
     アップロード前やCSVでないファイルがアップロードされた場合はNoneを返す。
 
@@ -47,7 +46,7 @@ debug_df = pd.DataFrame(
 """デバッグ用のDataFrame"""
 
 
-def select_objective_columns(df: pd.DataFrame) -> list[str]:
+def objective_columns_select(df: pd.DataFrame) -> list[str]:
     """変数から目的変数を選択するウィジェット。"""
     objective_columns: list[str] = []
     for column in df.columns:
@@ -59,7 +58,7 @@ def select_objective_columns(df: pd.DataFrame) -> list[str]:
     return objective_columns
 
 
-def input_parameter_config(parameter_df: pd.DataFrame) -> Parameters:
+def parameter_config_input(parameter_df: pd.DataFrame) -> Parameters:
     """説明変数の設定を行うウィジェット。"""
 
     parameters: Parameters = {}
@@ -94,7 +93,7 @@ def input_parameter_config(parameter_df: pd.DataFrame) -> Parameters:
     return parameters
 
 
-def input_objective_config(objective_df: pd.DataFrame) -> Objectives:
+def objective_config_input(objective_df: pd.DataFrame) -> Objectives:
     """目的変数の設定を行うウィジェット。"""
     objectives: Objectives = {}
     for column in objective_df.columns:
