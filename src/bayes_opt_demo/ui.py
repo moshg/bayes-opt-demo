@@ -39,7 +39,7 @@ def upload_csv():
 debug_df = pd.DataFrame(
     {
         "x1": [1.0, 2.0, 3.0],
-        "x2": ["foo", "bar", "foo"],
+        "x2": ["foo", "bar", None],
         "x3": [2.0, 1.0, None],
         "y": [3.0, 2.0, 3.5],
     }

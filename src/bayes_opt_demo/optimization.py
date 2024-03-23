@@ -32,12 +32,14 @@ def bayes_optimize(
 def preprocess(dataset: Dataset) -> Dataset:
     """データセットを前処理する。
 
-    数値列の欠損値を平均値で埋める。
+    欠損値を埋める。
+    - 数値型の場合は平均値で埋める
+    - カテゴリカル型の場合は最頻値で埋める
     """
     return dataset.map_series(
         lambda series: series.fillna(series.mean())
         if pd.api.types.is_float_dtype(series)
-        else series
+        else series.fillna(series.mode().iloc[0])
     )
 
 
