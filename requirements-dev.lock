@@ -71,7 +71,7 @@ filelock==3.13.1
     # via torch
 fqdn==1.5.1
     # via jsonschema
-fsspec==2024.3.0
+fsspec==2024.3.1
     # via torch
 gitdb==4.0.11
     # via gitpython
@@ -149,7 +149,7 @@ jupyter-core==5.7.2
     # via nbconvert
     # via nbformat
     # via qtconsole
-jupyter-events==0.9.1
+jupyter-events==0.10.0
     # via jupyter-server
 jupyter-lsp==2.2.4
     # via jupyterlab
@@ -194,7 +194,7 @@ mypy-extensions==1.0.0
     # via typing-inspect
 nbclient==0.10.0
     # via nbconvert
-nbconvert==7.16.2
+nbconvert==7.16.3
     # via jupyter
     # via jupyter-server
 nbformat==5.10.3
@@ -214,7 +214,6 @@ numpy==1.26.4
     # via altair
     # via jaxtyping
     # via opt-einsum
-    # via pandas
     # via pyarrow
     # via pydeck
     # via pyro-ppl
@@ -262,7 +261,7 @@ psutil==5.9.8
     # via ipykernel
 pure-eval==0.2.2
     # via stack-data
-pyarrow==15.0.1
+pyarrow==15.0.2
     # via streamlit
 pycparser==2.21
     # via cffi
@@ -358,7 +357,7 @@ tenacity==8.2.3
 terminado==0.18.1
     # via jupyter-server
     # via jupyter-server-terminals
-threadpoolctl==3.3.0
+threadpoolctl==3.4.0
     # via scikit-learn
 tinycss2==1.2.1
     # via nbconvert

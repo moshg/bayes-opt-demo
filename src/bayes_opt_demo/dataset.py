@@ -1,7 +1,7 @@
 """データの値と制約に関する型"""
 
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, TypeAlias, Union
 
 import pandas as pd
 
@@ -74,7 +74,7 @@ class Experiment:
     objectives: dict[str, float]
 
 
-type Parameters = dict[str, ParamFloatColumn | ParamCategoricalColumn]
+Parameters: TypeAlias = dict[str, Union["ParamFloatColumn", "ParamCategoricalColumn"]]
 
 
 @dataclass
@@ -94,7 +94,7 @@ class ParamCategoricalColumn:
     options: list[str]
 
 
-type Objectives = dict[str, ObjFloatColumn]
+Objectives: TypeAlias = dict[str, "ObjFloatColumn"]
 
 
 @dataclass
