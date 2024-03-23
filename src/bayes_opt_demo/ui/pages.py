@@ -15,7 +15,7 @@ from pygwalker.api.streamlit import init_streamlit_comm
 
 def upload_page():
     """教師データのアップロードページ"""
-    st.header("学習データのアップロード")
+    st.header("データのアップロード")
     df = csv_uploader()
 
     data_src = st.radio(
@@ -26,7 +26,6 @@ def upload_page():
     if data_src == "デバッグデータ":
         df = debug_df
 
-    # データが入力されるまで何も表示しない
     if df is None:
         return
 
