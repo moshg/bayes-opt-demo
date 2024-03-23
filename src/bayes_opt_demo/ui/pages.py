@@ -5,10 +5,12 @@ from bayes_opt_demo.optimization import bayes_optimize
 from bayes_opt_demo.ui.widgets import (
     csv_uploader,
     debug_df,
+    get_pyg_renderer,
     objective_columns_select,
     objective_config_input,
     parameter_config_input,
 )
+from pygwalker.api.streamlit import init_streamlit_comm
 
 
 def upload_page():
@@ -89,3 +91,10 @@ def suggestion_page(df: pd.DataFrame):
     # 提案されたデータを表示する
     candidates = pd.DataFrame(candidates)
     st.dataframe(candidates)
+
+
+def visualization_page(df: pd.DataFrame):
+    """データ可視化ページ"""
+    init_streamlit_comm()
+    renderer = get_pyg_renderer(df)
+    renderer.render_explore()

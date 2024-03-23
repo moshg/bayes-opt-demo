@@ -7,6 +7,7 @@ from bayes_opt_demo.dataset import (
     Parameters,
     ParamFloatColumn,
 )
+from pygwalker.api.streamlit import StreamlitRenderer
 
 
 def csv_uploader():
@@ -122,3 +123,12 @@ def objective_config_input(objective_df: pd.DataFrame) -> Objectives:
         )
 
     return objectives
+
+
+@st.cache_data
+def get_pyg_renderer(df: pd.DataFrame) -> StreamlitRenderer:
+    """PygWalkerのStreamlitRendererを取得する。
+
+    ref. https://docs.kanaries.net/ja/pygwalker/use-pygwalker-with-streamlit
+    """
+    return StreamlitRenderer(df, debug=False)
