@@ -1,11 +1,16 @@
 """エントリーポイント"""
 
+import os
+
 import streamlit as st
 
 from bayes_opt_demo.ui.pages import suggestion_page, upload_page, visualization_page
 
 
 def main():
+    # CWDを表示
+    print(os.getcwd())
+
     st.set_page_config(page_title="ベイズ最適化デモ", layout="wide", page_icon="📊")
 
     st.title("ベイズ最適化デモ")
