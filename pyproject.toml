@@ -20,7 +20,8 @@ managed = true
 dev-dependencies = ["ipykernel>=6.29.3", "jupyter>=1.0.0"]
 
 [tool.rye.scripts]
-start = "streamlit run src/bayes_opt_demo/main.py"
+# ref: https://docs.streamlit.io/library/advanced-features/configuration
+start = { cmd = "streamlit run src/bayes_opt_demo/main.py", env = { STREAMLIT_BROWSER_GATHER_USAGE_STATS = false } }
 
 [tool.hatch.metadata]
 allow-direct-references = true
