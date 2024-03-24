@@ -16,7 +16,7 @@ def csv_uploader():
 
     DataFrameはfloat, str, Noneのみを含む。
     """
-    file = st.file_uploader("CSVファイルをアップロードしてください")
+    file = st.file_uploader("ヘッダー付きCSVファイルをアップロードしてください")
 
     if file is None:
         return
@@ -34,17 +34,6 @@ def csv_uploader():
             df[column] = df[column].astype(float)
 
     return df
-
-
-debug_df = pd.DataFrame(
-    {
-        "x1": [1.0, 2.0, 3.0],
-        "x2": ["foo", "bar", None],
-        "x3": [2.0, 1.0, None],
-        "y": [3.0, 2.0, 3.5],
-    }
-)
-"""デバッグ用のDataFrame"""
 
 
 def objective_columns_select(df: pd.DataFrame) -> list[str]:

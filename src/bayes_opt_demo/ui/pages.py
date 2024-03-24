@@ -1,10 +1,10 @@
 import pandas as pd
 import streamlit as st
 from bayes_opt_demo.dataset import Dataset, Objectives
+from bayes_opt_demo.example_data import debug_df, generate_hartmann6_sobol
 from bayes_opt_demo.optimization import bayes_optimize
 from bayes_opt_demo.ui.widgets import (
     csv_uploader,
-    debug_df,
     get_pyg_renderer,
     objective_columns_select,
     objective_config_input,
@@ -18,12 +18,20 @@ def upload_page():
     st.header("データのアップロード")
     df = csv_uploader()
 
+    upload_option = "アップロードされたCSV"
+    demo_option = "デモ (Hartmann 6 Sobol)"
+    debug_option = "デバッグデータ"
+
     data_src = st.radio(
         "使用データ",
-        options=["アップロードされたCSV", "デバッグデータ"],
+        options=[upload_option, demo_option, debug_option],
         horizontal=True,
     )
-    if data_src == "デバッグデータ":
+
+    if data_src == demo_option:
+        # 実行ごとに値が変わらないようにseedを固定
+        df = generate_hartmann6_sobol(12, seed=13)
+    elif data_src == debug_option:
         df = debug_df
 
     if df is None:
