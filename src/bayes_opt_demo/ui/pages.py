@@ -103,5 +103,12 @@ def suggestion_page(df: pd.DataFrame):
 def visualization_page(df: pd.DataFrame):
     """データ可視化ページ"""
     init_streamlit_comm()
+
+    st.page_link(
+        "https://docs.kanaries.net/ja/graphic-walker/data-viz/create-data-viz",
+        label="データ可視化のマニュアル (外部サイト)",
+        icon="📚",
+    )
+
     renderer = get_pyg_renderer(df)
     renderer.render_explore()
