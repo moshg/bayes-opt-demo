@@ -16,7 +16,6 @@ from pygwalker.api.streamlit import init_streamlit_comm
 def upload_page():
     """教師データのアップロードページ"""
     st.header("データのアップロード")
-    df = csv_uploader()
 
     upload_option = "アップロードされたCSV"
     demo_option = "デモ (Hartmann 6 Sobol)"
@@ -28,6 +27,9 @@ def upload_page():
         horizontal=True,
     )
 
+    df: pd.DataFrame | None = None
+    if data_src == upload_option:
+        df = csv_uploader()
     if data_src == demo_option:
         # 実行ごとに値が変わらないようにseedを固定
         df = generate_hartmann6_sobol(12, seed=13)
@@ -69,6 +71,8 @@ def suggestion_page(df: pd.DataFrame):
         parameters=parameters,
         objectives=objectives,
     )
+
+    st.divider()
 
     # ベイズ最適化の開始
     st.header("実験候補を生成する")
