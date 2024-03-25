@@ -3,6 +3,8 @@
 from typing import Any, Iterable, assert_never
 
 import pandas as pd
+from ax.modelbridge.generation_strategy import GenerationStep, GenerationStrategy
+from ax.modelbridge.registry import Models
 from ax.service.ax_client import AxClient, ObjectiveProperties
 
 from bayes_opt_demo.dataset import Dataset, ParamCategoricalColumn, ParamFloatColumn
@@ -11,7 +13,18 @@ from bayes_opt_demo.dataset import Dataset, ParamCategoricalColumn, ParamFloatCo
 def bayes_optimize(
     dataset: Dataset, max_trials: int
 ) -> list[dict[str, float | str | None]]:
-    ax_client = AxClient()
+    # ref. https://ax.dev/tutorials/generation_strategy.html
+    generation_strategy = GenerationStrategy(
+        [
+            GenerationStep(
+                model=Models.BO_MIXED
+                if dataset.has_categorical_parameters()
+                else Models.GPEI,
+                num_trials=-1,
+            )
+        ]
+    )
+    ax_client = AxClient(generation_strategy=generation_strategy)
 
     dataset = preprocess(dataset)
 

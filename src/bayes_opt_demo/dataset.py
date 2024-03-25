@@ -38,6 +38,12 @@ class Dataset:
         self.objectives = objectives
         self._count = count
 
+    def has_categorical_parameters(self):
+        return any(
+            isinstance(column, ParamCategoricalColumn)
+            for column in self.parameters.values()
+        )
+
     def experiments(self):
         """データセットから実験の列を生成する。"""
         for i in range(self._count):
