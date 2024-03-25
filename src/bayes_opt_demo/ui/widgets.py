@@ -1,6 +1,9 @@
 import pandas as pd
 import streamlit as st
+from ax.plot.contour import interact_contour_plotly
+from ax.service.ax_client import AxClient
 from bayes_opt_demo.dataset import (
+    Dataset,
     Objectives,
     ObjFloatColumn,
     ParamCategoricalColumn,
@@ -112,6 +115,37 @@ def objective_config_input(objective_df: pd.DataFrame) -> Objectives:
         )
 
     return objectives
+
+
+def render_bayes_opt(dataset: Dataset, ax_client: AxClient):
+    """ベイズ最適化の結果を表示する。"""
+
+    # FIXME: クリックがfalseになるので、ラジオボタンの選択ができない
+    # if len(dataset.objectives) > 1:
+    #     objective_name = st.radio("目的変数", options=dataset.objectives.keys())
+
+    #     if objective_name is None:
+    #         return
+
+    #     objective = dataset.objectives.get(objective_name)
+    #     if objective is None:
+    #         st.error(f"目的変数 {objective_name} が見つかりません", icon="⚠")
+    #         return
+
+    objective_name = next(iter(dataset.objectives.keys()))
+    objective = next(iter(dataset.objectives.values()))
+    if objective is None:
+        st.error(f"目的変数 {objective_name} が存在しません", icon="⚠")
+        return
+
+    fig = interact_contour_plotly(
+        model=ax_client.generation_strategy.model,  # type: ignore
+        metric_name=objective_name,
+        lower_is_better=objective.minimize,
+    )
+    st.plotly_chart(fig)
+
+    st.info("目的変数の選択は未実装です", icon="⚠")
 
 
 @st.cache_data(ttl="1h", max_entries=1)

@@ -12,7 +12,9 @@ from bayes_opt_demo.dataset import Dataset, ParamCategoricalColumn, ParamFloatCo
 
 def bayes_optimize(
     dataset: Dataset, max_trials: int
-) -> list[dict[str, float | str | None]]:
+) -> tuple[list[dict[str, float | str | None]], AxClient]:
+    """ベイズ最適化を行い、候補パラメータとAxClientを返す。"""
+
     # ref. https://ax.dev/tutorials/generation_strategy.html
     generation_strategy = GenerationStrategy(
         [
@@ -39,7 +41,7 @@ def bayes_optimize(
 
     candidates = postprocess(dataset, candidates.values())
 
-    return candidates
+    return candidates, ax_client
 
 
 def preprocess(dataset: Dataset) -> Dataset:

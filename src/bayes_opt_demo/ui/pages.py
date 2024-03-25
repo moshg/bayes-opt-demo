@@ -9,6 +9,7 @@ from bayes_opt_demo.ui.widgets import (
     objective_columns_select,
     objective_config_input,
     parameter_config_input,
+    render_bayes_opt,
 )
 from pygwalker.api.streamlit import init_streamlit_comm
 
@@ -97,11 +98,15 @@ def suggestion_page(df: pd.DataFrame):
 
     # ベイズ最適化を開始する
     max_trials = max(int(max_trials), 1)
-    candidates = bayes_optimize(dataset, max_trials=max_trials)
+    candidates, ax_client = bayes_optimize(dataset, max_trials=max_trials)
 
     # 提案されたデータを表示する
     candidates = pd.DataFrame(candidates)
     st.dataframe(candidates)
+
+    # ベイズ最適化の結果を表示する
+
+    render_bayes_opt(dataset, ax_client)
 
 
 def visualization_page(df: pd.DataFrame):
