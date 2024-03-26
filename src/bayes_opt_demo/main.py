@@ -1,11 +1,18 @@
 """エントリーポイント"""
 
+import os
+from pathlib import Path
+
 import streamlit as st
 
 from bayes_opt_demo.ui import suggestion_page, upload_page, visualization_page
 
 
 def main():
+    # Streamlit Community Cloudとローカルで同じカレントディレクトリになるようsrcに移動する
+    main_path = Path(__file__).resolve()
+    src_dir = main_path.parent.parent
+    os.chdir(src_dir)
     st.set_page_config(page_title="ベイズ最適化デモ", layout="wide", page_icon="📊")
 
     st.title("ベイズ最適化デモ")

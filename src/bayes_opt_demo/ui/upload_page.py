@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
-from bayes_opt_demo.example_data import debug_df, generate_hartmann6_sobol
+
+from bayes_opt_demo.example_data import debug_df, get_hartmann6_bayes_opt
 
 
 def upload_page():
@@ -8,7 +9,7 @@ def upload_page():
     st.header("データのアップロード")
 
     upload_option = "アップロードされたCSV"
-    demo_option = "デモ (Hartmann 6 Sobol)"
+    demo_option = "デモ (Hartmann 6 ベイズ最適化中)"
     debug_option = "デバッグデータ"
 
     data_src = st.radio(
@@ -21,8 +22,7 @@ def upload_page():
     if data_src == upload_option:
         df = csv_uploader()
     if data_src == demo_option:
-        # 実行ごとに値が変わらないようにseedを固定
-        df = generate_hartmann6_sobol(12, seed=13)
+        df = get_hartmann6_bayes_opt()
     elif data_src == debug_option:
         df = debug_df
 
