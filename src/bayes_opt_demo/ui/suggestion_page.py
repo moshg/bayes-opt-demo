@@ -56,7 +56,7 @@ def suggestion_page(df: pd.DataFrame):
 
     # ベイズ最適化の開始
     st.header("実験候補を生成する")
-    max_trials = st.number_input("生成数の上限", value=10, min_value=1)
+    max_trials = st.number_input("生成数の上限", value=5, min_value=1)
 
     can_start = all(
         [
