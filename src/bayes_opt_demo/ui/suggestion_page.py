@@ -11,6 +11,7 @@ from bayes_opt_demo.dataset import (
     Parameters,
     ParamFloatColumn,
 )
+from bayes_opt_demo.math import round_range
 from bayes_opt_demo.optimization import bayes_optimize
 
 
@@ -119,12 +120,11 @@ def parameter_config_input(parameter_df: pd.DataFrame) -> Parameters:
             )
         else:
             col1, col2 = st.columns(2, gap="medium")
-            lower_bound = col1.number_input(
-                f"{column}の下限", value=float(parameter_df[column].min())
+            default_lower, default_higher = round_range(
+                float(parameter_df[column].min()), float(parameter_df[column].max())
             )
-            upper_bound = col2.number_input(
-                f"{column}の上限", value=float(parameter_df[column].max())
-            )
+            lower_bound = col1.number_input(f"{column}の下限", value=default_lower)
+            upper_bound = col2.number_input(f"{column}の上限", value=default_higher)
 
             parameters[column] = ParamFloatColumn(
                 series=parameter_df[column],
