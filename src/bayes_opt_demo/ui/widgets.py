@@ -145,7 +145,8 @@ def render_bayes_opt(dataset: Dataset, ax_client: AxClient):
     )
     st.plotly_chart(fig)
 
-    st.info("目的変数の選択は未実装です", icon="⚠")
+    if len(dataset.objectives) > 1:
+        st.info("目的変数の選択は未実装です", icon="⚠")
 
 
 @st.cache_data(ttl="1h", max_entries=1)
