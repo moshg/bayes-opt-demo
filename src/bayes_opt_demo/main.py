@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from bayes_opt_demo.ui.pages import suggestion_page, upload_page, visualization_page
+from bayes_opt_demo.ui import suggestion_page, upload_page, visualization_page
 
 
 def main():

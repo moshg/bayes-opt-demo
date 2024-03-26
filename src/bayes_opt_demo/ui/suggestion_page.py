@@ -10,33 +10,69 @@ from bayes_opt_demo.dataset import (
     Parameters,
     ParamFloatColumn,
 )
-from pygwalker.api.streamlit import StreamlitRenderer
+from bayes_opt_demo.optimization import bayes_optimize
 
 
-def csv_uploader():
-    """CSVファイルをアップロードし、DataFrameを返すウィジェット。
-    アップロード前やCSVでないファイルがアップロードされた場合はNoneを返す。
+def suggestion_page(df: pd.DataFrame):
+    """実験提案ページ"""
+    # 目的変数の選択
+    st.header("目的変数の選択")
+    objective_columns = objective_columns_select(df)
+    parameter_series = pd.DataFrame(
+        {column: df[column] for column in df.columns if column not in objective_columns}
+    )
+    objective_series = pd.DataFrame(
+        {column: df[column] for column in df.columns if column in objective_columns}
+    )
 
-    DataFrameはfloat, str, Noneのみを含む。
-    """
-    file = st.file_uploader("ヘッダー付きCSVファイルをアップロードしてください")
+    # 各変数の設定
+    st.header("設定")
 
-    if file is None:
+    st.subheader("目的変数の目標")
+    objectives: Objectives = objective_config_input(objective_series)
+
+    st.subheader("説明変数の制約")
+    parameters = parameter_config_input(parameter_series)
+
+    dataset = Dataset(
+        parameters=parameters,
+        objectives=objectives,
+    )
+
+    st.divider()
+
+    # ベイズ最適化の開始
+    st.header("実験候補を生成する")
+    max_trials = st.number_input("生成数の上限", value=10, min_value=1)
+
+    can_start = all(
+        [
+            len(parameters) > 0,
+            len(objectives) > 0,
+        ]
+    )
+    if not can_start:
+        st.button(
+            "実行",
+            disabled=not can_start,
+            help="説明変数と目的変数はそれぞれ1つ以上必要です",
+        )
         return
 
-    # ファイルをCSVとしてパースする
-    try:
-        df = pd.read_csv(file)
-    except Exception as e:
-        st.error(f"指定されたファイルはCSVではありません: {e}", icon="⚠")
+    if not st.button("実行", disabled=not can_start):
         return
 
-    # intはfloatに変換する
-    for column in list(df.columns):
-        if pd.api.types.is_integer_dtype(df[column]):
-            df[column] = df[column].astype(float)
+    # ベイズ最適化を開始する
+    max_trials = max(int(max_trials), 1)
+    candidates, ax_client = bayes_optimize(dataset, max_trials=max_trials)
 
-    return df
+    # 提案されたデータを表示する
+    candidates = pd.DataFrame(candidates)
+    st.dataframe(candidates)
+
+    # ベイズ最適化の結果を表示する
+
+    render_bayes_opt(dataset, ax_client)
 
 
 def objective_columns_select(df: pd.DataFrame) -> list[str]:
@@ -147,12 +183,3 @@ def render_bayes_opt(dataset: Dataset, ax_client: AxClient):
 
     if len(dataset.objectives) > 1:
         st.info("目的変数の選択は未実装です", icon="⚠")
-
-
-@st.cache_data(ttl="1h", max_entries=1)
-def get_pyg_renderer(df: pd.DataFrame) -> StreamlitRenderer:
-    """PygWalkerのStreamlitRendererを取得する。
-
-    ref. https://docs.kanaries.net/ja/pygwalker/use-pygwalker-with-streamlit
-    """
-    return StreamlitRenderer(df, debug=False)
