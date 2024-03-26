@@ -1,7 +1,8 @@
 import pandas as pd
 import streamlit as st
-from ax.plot.contour import interact_contour_plotly
+from ax.plot.slice import interact_slice_plotly
 from ax.service.ax_client import AxClient
+
 from bayes_opt_demo.dataset import (
     Dataset,
     Objectives,
@@ -17,6 +18,9 @@ def suggestion_page(df: pd.DataFrame):
     """実験提案ページ"""
     # 目的変数の選択
     st.header("目的変数の選択")
+    st.text(
+        "チェックしていないものが説明変数、チェックしたものが目的変数として扱われます"
+    )
     objective_columns = objective_columns_select(df)
     parameter_series = pd.DataFrame(
         {column: df[column] for column in df.columns if column not in objective_columns}
@@ -26,13 +30,21 @@ def suggestion_page(df: pd.DataFrame):
     )
 
     # 各変数の設定
-    st.header("設定")
+    st.header("探索の設定")
 
     st.subheader("目的変数の目標")
-    objectives: Objectives = objective_config_input(objective_series)
+    if objective_series.empty:
+        st.info("目的変数を選択してください", icon="⚠")
+        objectives: Objectives = {}
+    else:
+        objectives: Objectives = objective_config_input(objective_series)
 
-    st.subheader("説明変数の制約")
-    parameters = parameter_config_input(parameter_series)
+    st.subheader("探索空間")
+    if parameter_series.empty:
+        st.info("説明変数が存在しません", icon="⚠")
+        parameters: Parameters = {}
+    else:
+        parameters = parameter_config_input(parameter_series)
 
     dataset = Dataset(
         parameters=parameters,
@@ -67,6 +79,7 @@ def suggestion_page(df: pd.DataFrame):
     candidates, ax_client = bayes_optimize(dataset, max_trials=max_trials)
 
     # 提案されたデータを表示する
+    st.subheader("提案データ")
     candidates = pd.DataFrame(candidates)
     st.dataframe(candidates)
 
@@ -156,30 +169,10 @@ def objective_config_input(objective_df: pd.DataFrame) -> Objectives:
 def render_bayes_opt(dataset: Dataset, ax_client: AxClient):
     """ベイズ最適化の結果を表示する。"""
 
-    # FIXME: クリックがfalseになるので、ラジオボタンの選択ができない
-    # if len(dataset.objectives) > 1:
-    #     objective_name = st.radio("目的変数", options=dataset.objectives.keys())
-
-    #     if objective_name is None:
-    #         return
-
-    #     objective = dataset.objectives.get(objective_name)
-    #     if objective is None:
-    #         st.error(f"目的変数 {objective_name} が見つかりません", icon="⚠")
-    #         return
-
-    objective_name = next(iter(dataset.objectives.keys()))
-    objective = next(iter(dataset.objectives.values()))
-    if objective is None:
-        st.error(f"目的変数 {objective_name} が存在しません", icon="⚠")
-        return
-
-    fig = interact_contour_plotly(
+    st.subheader("モデルの予測値")
+    fig = interact_slice_plotly(
         model=ax_client.generation_strategy.model,  # type: ignore
-        metric_name=objective_name,
-        lower_is_better=objective.minimize,
     )
     st.plotly_chart(fig)
 
-    if len(dataset.objectives) > 1:
-        st.info("目的変数の選択は未実装です", icon="⚠")
+    # TODO: contourによる可視化
