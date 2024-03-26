@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+from pygwalker import FieldSpec
 from pygwalker.api.streamlit import StreamlitRenderer, init_streamlit_comm
 
 
@@ -23,4 +24,6 @@ def get_pyg_renderer(df: pd.DataFrame) -> StreamlitRenderer:
 
     ref. https://docs.kanaries.net/ja/pygwalker/use-pygwalker-with-streamlit
     """
-    return StreamlitRenderer(df, debug=False)
+    # デフォルトで集計しないように設定
+    field_specs = {col: FieldSpec(analyticType="dimension") for col in df.columns}
+    return StreamlitRenderer(df, field_specs=field_specs, debug=False)
