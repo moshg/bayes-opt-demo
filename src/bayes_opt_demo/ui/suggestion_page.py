@@ -79,14 +79,16 @@ def suggestion_page(df: pd.DataFrame):
     max_trials = max(int(max_trials), 1)
     candidates, ax_client = bayes_optimize(dataset, max_trials=max_trials)
 
-    # 提案されたデータを表示する
-    st.subheader("提案データ")
-    candidates = pd.DataFrame(candidates)
-    st.dataframe(candidates)
+    suggestion_tab, prediction_tab = st.tabs(["提案データ", "モデルの予測値"])
+
+    # 実験候補を表示する
+    with suggestion_tab:
+        candidates = pd.DataFrame(candidates)
+        st.dataframe(candidates)
 
     # ベイズ最適化の結果を表示する
-
-    render_bayes_opt(dataset, ax_client)
+    with prediction_tab:
+        render_predictions(ax_client)
 
 
 def objective_columns_select(df: pd.DataFrame) -> list[str]:
@@ -166,8 +168,8 @@ def objective_config_input(objective_df: pd.DataFrame) -> Objectives:
     return objectives
 
 
-def render_bayes_opt(dataset: Dataset, ax_client: AxClient):
-    """ベイズ最適化の結果を表示する。"""
+def render_predictions(ax_client: AxClient):
+    """モデルの予測値を表示する。"""
 
     st.subheader("モデルの予測値")
     fig = interact_slice_plotly(
