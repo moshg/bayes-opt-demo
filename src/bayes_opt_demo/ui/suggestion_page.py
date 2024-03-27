@@ -33,19 +33,19 @@ def suggestion_page(df: pd.DataFrame):
     # 各変数の設定
     st.header("探索の設定")
 
-    st.subheader("目的変数の目標")
-    if objective_series.empty:
-        st.info("目的変数を選択してください", icon="⚠")
-        objectives: Objectives = {}
-    else:
-        objectives: Objectives = objective_config_input(objective_series)
+    with st.expander("目標", expanded=True):
+        if objective_series.empty:
+            st.info("目的変数を選択してください", icon="⚠")
+            objectives: Objectives = {}
+        else:
+            objectives: Objectives = objective_config_input(objective_series)
 
-    st.subheader("探索空間")
-    if parameter_series.empty:
-        st.info("説明変数が存在しません", icon="⚠")
-        parameters: Parameters = {}
-    else:
-        parameters = parameter_config_input(parameter_series)
+    with st.expander("探索空間", expanded=False):
+        if parameter_series.empty:
+            st.info("説明変数が存在しません", icon="⚠")
+            parameters: Parameters = {}
+        else:
+            parameters = parameter_config_input(parameter_series)
 
     dataset = Dataset(
         parameters=parameters,
